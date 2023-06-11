@@ -58,6 +58,13 @@ It uses the `requests` library to get the HTTP response body. Then it uses `re` 
 
 This script does _not_ use the Reddit API at all. It's just basic HTTP requests.
 
+Set the location and name of the output file at the top of the script
+
+```
+# Set location and name of output file here
+output = 'output/subreddits.txt'
+```
+
 ---
 
 # Data Access
