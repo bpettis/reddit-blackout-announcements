@@ -24,6 +24,40 @@ I've created this script for my own research purposes, and so I can't necessaril
 
 ## Configuration
 
+### Google Cloud
+
+The `get-stickies.py` script is set up to save the output data into a Google Cloud Storage Bucket. This can be handy for if you are planning on publicizing the data. You'll need to do a bit of setup.
+
+- You will need to create a Google Cloud project (or use an existing one)
+- You will need to create a Storage Bucket (with region/redundancy/privacy settings that fit your needs). 
+- You will need to create a Service Account which has permission to write files into that bucket. 
+- You will need to download a key for that service account in JSON format
+
+The information of the above should be placed in a `.env` file in the root directory:
+
+```
+GCS_BUCKET_NAME='gcs_bucket_name_here'
+GCP_PROJECT='project_name_here'
+GOOGLE_APPLICATION_CREDENTIALS='keys/path/to/gcs-credentials.json'
+```
+
+If you want to disable Google Cloud Storage, just change `use_gcs = True` to `use_gcs = False` toward the top of the script 
+
+#### Cloud Logging
+
+The `get stickies.py` scripy can also log information via Google Cloud logging. If you want to use this option, the service account that you use will need to have permission to write logs as well. 
+
+Set the name of the log by adding a line in the `.env` file in the root directory:
+
+```
+LOG_ID='reddit-blackout-announcements'
+```
+
+If you want to disable Google Cloud Storage, just change `use_cloud_logging = True` to `use_cloud_logging = False` toward the top of the script 
+
+### Google Cloud Authentication
+
+You will need to save your service account keys as a JSON file and place it in a place that the script can find. Set this file path using the `GOOGLE_APPLICATION_CREDENTIALS` environment variable
 
 ### Reddit Authentication:
 
@@ -65,8 +99,40 @@ Set the location and name of the output file at the top of the script
 output = 'output/subreddits.txt'
 ```
 
+### `get-stickies.py`
+
+This is a slightly modified version of the script that I had previously written to preserve other subreddit info: https://github.com/bpettis/reddit-scrape_mods-rules
+
+It will create a CSV file for each of the listed subreddits. Each row of the CSV represents a stickied post. There currently isn't any logic to try and detect which post is the one announcing the blackout. I'm just saving all of them.
+
+Set the list of input subreddits in `input_list = 'output/subreddits.txt'` at the top of the script
+
+That file should be the one created by `list-subreddits.py`
+
+**NOTE*: This script is only going to get the stickied posts from each of the specified subreddits. If the subreddit doesn't have a sticky about their participation in the blackout, it won't be fully represented here. The script will raise a `prawcore.exceptions.NotFound` exception and continue on. This means you'll get some CSV files that look incomplete.
+
 ---
 
 # Data Access
 
-If you're just interested in taking a look at the content that I scraped, I will be making that available: <somewhere, check back later>
+If you're just interested in taking a look at the content that I scraped, I will be making that available:
+
+- List of subreddits: https://storage.googleapis.com/reddit-blackout-announcements/subreddits.txt
+- All stickied posts: https://storage.googleapis.com/reddit-blackout-announcements/
+
+The above URL for all stickied posts will give you an XML file of all contents in the storage bucket. Each `<Contents>` element represents a file:
+
+```
+<Contents>
+    <Key>2023-06-11/stickies/funny.csv</Key>
+    <Generation>1686507430668697</Generation>
+    <MetaGeneration>1</MetaGeneration>
+    <LastModified>2023-06-11T18:17:10.671Z</LastModified>
+    <ETag>"ceab42346825f636b26ec470b417aa8d"</ETag>
+    <Size>2620</Size>
+</Contents>
+```
+
+You can use the `<Key>` to build the URL like this:  `https://storage.googleapis.com/reddit-blackout-announcements` + `<Key>`
+
+For example: [`https://storage.googleapis.com/reddit-blackout-announcements/2023-06-11/stickies/funny.csv`](https://storage.googleapis.com/reddit-blackout-announcements/2023-06-11/stickies/funny.csv)
