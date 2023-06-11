@@ -34,9 +34,8 @@ def get_subreddits():
     return subreddit_list
 
 def csv_setup(sub):
-    today = datetime.today().strftime('%Y-%m-%d')
-    Path("output/" + today + "/stickies").mkdir(parents=True, exist_ok=True)
-    filename = "output/" + today + "/stickies/" + sub + ".csv"
+    Path("output/stickies").mkdir(parents=True, exist_ok=True)
+    filename = "output/stickies/" + sub + ".csv"
     with open(filename, 'w') as file:
         writer = csv.writer(file)
         writer.writerow(['id', 'created', 'author', 'title', 'url', 'text'])
@@ -147,9 +146,7 @@ def upload_blob(filename, destination_blob_name):
             "bucket-name": bucket_name
         })
 
-def main(event_data, context):
-    # We have to include event_data and context because these will be passed as arguments when invoked as a Cloud Function
-    # and the runtime will freak out if the function only accepts 0 arguments... go figure
+def main():
     print('** get_stickies.py | Retrieving Stickied Posts **')
     logger.log_struct(
         {
@@ -172,5 +169,4 @@ def main(event_data, context):
         })
 
 if __name__ == "__main__":
-
-    main('foo', 'bar') # see note in main() for why we have these filler variables that aren't actually doing anything...
+    main
