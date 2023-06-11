@@ -32,7 +32,7 @@ logger = log_client.logger(name=log_name)
 def write_log(payload):
     # takes an input dictionary and writes it to cloud logging - but only after checking if we want to log or not
     if use_cloud_logging:
-        write_log(payload)
+        logger.log_struct(payload)
     else:
         return
 
