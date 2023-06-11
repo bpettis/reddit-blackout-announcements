@@ -12,7 +12,37 @@ documentation forthcoming...
 
 ## Installation
 
+I've created this script for my own research purposes, and so I can't necessarily guarantee that it will work in _your_ environment. These notes are provided as reference, but I fully recognize that how I have things set up may not be best practices.
+
+### Dependencies
+
+- [PRAW (Python Reddit API Wrapper)](https://github.com/praw-dev/praw)
+
+### Install packages:
+
+`pip install -r requirements.txt`
+
 ## Configuration
+
+
+### Reddit Authentication:
+
+You'll need to have a Reddit account and generate Oauth2 credentials in order to authenticate to the Reddit API. Yes, this is a bit ironic given that this whole project is emerging in response to API changes.
+
+Head to [https://www.reddit.com/prefs/apps/](https://www.reddit.com/prefs/apps/) to create an app.
+
+### `praw.ini`
+
+Instead of placing Reddit credentials directly in the script, I use an external [`praw.ini` file](https://praw.readthedocs.io/en/stable/getting_started/configuration/prawini.html#praw-ini) to save configuration information. Put your credentials there, and not in the script and/or repo
+
+Example praw.ini:
+
+```
+[app_name]
+client_id=CLIENT_ID_HERE
+client_secret=CLIENT_SECRET_HERE
+user_agent=app_name_here:v0.0.1 (by /u/username_here)
+```
 
 ## Usage
 
