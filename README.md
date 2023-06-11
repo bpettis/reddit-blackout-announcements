@@ -46,6 +46,18 @@ user_agent=app_name_here:v0.0.1 (by /u/username_here)
 
 ## Usage
 
+### `list-subreddits.py`
+
+This script looks at three reddit posts and grabs the list of participating subreddits:
+
+- https://www.reddit.com/r/ModCoord/comments/1401qw5/incomplete_and_growing_list_of_participating/
+- https://www.reddit.com/r/ModCoord/comments/143fzf6/incomplete_and_growing_list_of_participating/
+- https://www.reddit.com/r/ModCoord/comments/146ffpb/incomplete_and_growing_list_of_participating/
+
+It uses the `requests` library to get the HTTP response body. Then it uses `re` to search for links that look like `<a href="/r/iphone/">r/iphone</a>`, e.g. what the list looks like in the post. Next it's just a bit of string cleanup and then writing to an output file.
+
+This script does _not_ use the Reddit API at all. It's just basic HTTP requests.
+
 ---
 
 # Data Access
