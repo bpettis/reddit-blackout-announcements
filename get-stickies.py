@@ -15,6 +15,9 @@ input_list = 'output/subreddits.txt'
 # enable/disable google cloud storage
 use_gcs = True
 
+# enable/disbale Google Cloud Logging
+use_cloud_logging = True
+
 # load environment variables
 load_dotenv(find_dotenv())
 bucket_name = os.environ.get("GCS_BUCKET_NAME")
@@ -25,6 +28,13 @@ log_name = os.environ.get("LOG_ID")
 # Set up Google cloud logging:
 log_client = google.cloud.logging.Client(project=project_id)
 logger = log_client.logger(name=log_name)
+
+def write_log(payload):
+    # takes an input dictionary and writes it to cloud logging - but only after checking if we want to log or not
+    if use_cloud_logging:
+        write_log(payload)
+    else:
+        return
 
 def get_subreddits():
     subreddit_list = []
@@ -67,7 +77,7 @@ def get_stickies(sub, output):
             counter += 1
         except prawcore.exceptions.NotFound:
             print('Not found')
-            logger.log_struct(
+            write_log(
                 {
                     "message": "Not Found (prawcore.exceptions.NotFound)",
                     "severity": "WARNING",
@@ -84,7 +94,7 @@ def get_stickies(sub, output):
 
     # if > 0 stickies saved AND if gcs == True, upload the file to GCS 
     if (counter > 1) and (use_gcs == True):
-        logger.log_struct(
+        write_log(
         {
             "message": "Uploading file to GCS",
             "severity": "INFO",
@@ -97,7 +107,7 @@ def get_stickies(sub, output):
         try:
             upload_blob(output, blob_name)
         except Exception as e:
-            logger.log_struct(
+            write_log(
                 {
                     "message": "Exception when Uploading to GCS",
                     "severity": "WARNING",
@@ -106,7 +116,7 @@ def get_stickies(sub, output):
                     "exception": str(e)
                 })
     else:
-        logger.log_struct(
+        write_log(
         {
             "message": "Not Uploading to GCS",
             "severity": "INFO",
@@ -137,7 +147,7 @@ def upload_blob(filename, destination_blob_name):
     print(
         f"{destination_blob_name} was uploaded to {bucket_name}."
     )
-    logger.log_struct(
+    write_log(
         {
             "message": "File was uploaded",
             "target-metadata": "stickies",
@@ -148,7 +158,7 @@ def upload_blob(filename, destination_blob_name):
 
 def main():
     print('** get_stickies.py | Retrieving Stickied Posts **')
-    logger.log_struct(
+    write_log(
         {
             "message": "** get_stickies.py | Retrieving Stickied Posts **",
             "severity": "NOTICE",
@@ -161,7 +171,7 @@ def main():
         get_stickies(sub, output)
 
     print('** get_stickies.py | DONE **')
-    logger.log_struct(
+    write_log(
         {
             "message": "** get_stickies.py | DONE **",
             "target-metadata": "stickies",
