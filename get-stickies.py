@@ -16,7 +16,7 @@ input_list = 'output/subreddits.txt'
 use_gcs = True
 
 # enable/disbale Google Cloud Logging
-use_cloud_logging = True
+use_cloud_logging = False
 
 # load environment variables
 load_dotenv(find_dotenv())
@@ -157,7 +157,7 @@ def upload_blob(filename, destination_blob_name):
         })
 
 def main():
-    print('** get_stickies.py | Retrieving Stickied Posts **')
+    
     write_log(
         {
             "message": "** get_stickies.py | Retrieving Stickied Posts **",
@@ -170,7 +170,6 @@ def main():
         output = csv_setup(sub)
         get_stickies(sub, output)
 
-    print('** get_stickies.py | DONE **')
     write_log(
         {
             "message": "** get_stickies.py | DONE **",
@@ -179,4 +178,12 @@ def main():
         })
 
 if __name__ == "__main__":
-    main
+    print('** get_stickies.py | Retrieving Stickied Posts **')
+    start_time = datetime.now()
+    
+    main()
+
+    end_time = datetime.now()
+    total_time = end_time - start_time
+    print(f'Started at {start_time} and finished at {end_time}.\nTotal runtime was {total_time}')
+    print('** get_stickies.py | DONE **')
