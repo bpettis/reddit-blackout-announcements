@@ -16,7 +16,7 @@ input_list = 'output/subreddits.txt'
 use_gcs = True
 
 # enable/disbale Google Cloud Logging
-use_cloud_logging = False
+use_cloud_logging = True
 
 # load environment variables
 load_dotenv(find_dotenv())
