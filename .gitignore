@@ -139,3 +139,6 @@ output/*
 
 # macOS files
 .DS_Store
+
+# ignore nohup outputs if script is ran in the background
+nohup.out
