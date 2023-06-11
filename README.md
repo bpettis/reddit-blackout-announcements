@@ -109,8 +109,30 @@ Set the list of input subreddits in `input_list = 'output/subreddits.txt'` at th
 
 That file should be the one created by `list-subreddits.py`
 
+**NOTE*: This script is only going to get the stickied posts from each of the specified subreddits. If the subreddit doesn't have a sticky about their participation in the blackout, it won't be fully represented here. The script will raise a `prawcore.exceptions.NotFound` exception and continue on. This means you'll get some CSV files that look incomplete.
+
 ---
 
 # Data Access
 
-If you're just interested in taking a look at the content that I scraped, I will be making that available: <somewhere, check back later>
+If you're just interested in taking a look at the content that I scraped, I will be making that available:
+
+- List of subreddits: https://storage.googleapis.com/reddit-blackout-announcements/subreddits.txt
+- All stickied posts: https://storage.googleapis.com/reddit-blackout-announcements/
+
+The above URL for all stickied posts will give you an XML file of all contents in the storage bucket. Each `<Contents>` element represents a file:
+
+```
+<Contents>
+    <Key>2023-06-11/stickies/funny.csv</Key>
+    <Generation>1686507430668697</Generation>
+    <MetaGeneration>1</MetaGeneration>
+    <LastModified>2023-06-11T18:17:10.671Z</LastModified>
+    <ETag>"ceab42346825f636b26ec470b417aa8d"</ETag>
+    <Size>2620</Size>
+</Contents>
+```
+
+You can use the `<Key>` to build the URL like this:  `https://storage.googleapis.com/reddit-blackout-announcements` + `<Key>`
+
+For example: [`https://storage.googleapis.com/reddit-blackout-announcements/2023-06-11/stickies/funny.csv`](https://storage.googleapis.com/reddit-blackout-announcements/2023-06-11/stickies/funny.csv)
